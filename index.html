@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La tua ferita più attiva | Sara Valentino</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F5F0E8;
+    --cream-dark: #EDE6D6;
+    --sage: #7A8C72;
+    --sage-light: #A3B49A;
+    --sage-pale: #D4DDD0;
+    --ink: #2C2C2C;
+    --ink-soft: #5A5A5A;
+    --ink-faint: #9A9A9A;
+    --gold: #B8936A;
+    --gold-pale: #E8D5BC;
+    --white: #FDFAF4;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--cream);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'%3E%3Cg fill='none' stroke='%237A8C72' stroke-opacity='0.07'%3E%3Cellipse cx='80' cy='120' rx='18' ry='32' stroke-width='1' transform='rotate(-20 80 120)'/%3E%3Cellipse cx='100' cy='90' rx='12' ry='22' stroke-width='1' transform='rotate(15 100 90)'/%3E%3Cline x1='90' y1='150' x2='90' y2='200' stroke-width='1'/%3E%3Cellipse cx='520' cy='480' rx='22' ry='38' stroke-width='1' transform='rotate(30 520 480)'/%3E%3Cellipse cx='545' cy='455' rx='14' ry='26' stroke-width='1' transform='rotate(-10 545 455)'/%3E%3Cline x1='530' y1='510' x2='530' y2='560' stroke-width='1'/%3E%3Cellipse cx='300' cy='30' rx='10' ry='18' stroke-width='1' transform='rotate(5 300 30)'/%3E%3Cline x1='300' y1='48' x2='300' y2='80' stroke-width='1'/%3E%3Cellipse cx='560' cy='150' rx='8' ry='15' stroke-width='1' transform='rotate(-25 560 150)'/%3E%3Cellipse cx='40' cy='500' rx='16' ry='28' stroke-width='1' transform='rotate(10 40 500)'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 600px 600px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .screen { display: none; min-height: 100vh; padding: 60px 0 80px; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  #screen-intro { justify-content: center; text-align: center; }
+
+  .intro-ornament {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, var(--sage-light));
+    margin: 0 auto 40px;
+  }
+
+  .intro-eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 28px;
+  }
+
+  h1.title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(36px, 7vw, 54px);
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+  }
+
+  h1.title em { font-style: italic; color: var(--sage); }
+
+  .intro-text {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--ink-soft);
+    max-width: 480px;
+    margin: 0 auto 48px;
+  }
+
+  .intro-note {
+    font-size: 13px;
+    color: var(--ink-faint);
+    margin-top: 20px;
+    font-style: italic;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    background-color: var(--sage);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 16px 40px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    text-decoration: none;
+  }
+
+  .btn-primary:hover { background-color: var(--ink); transform: translateY(-1px); }
+
+  #screen-quiz { justify-content: flex-start; }
+
+  .quiz-header {
+    padding: 40px 0 32px;
+    border-bottom: 1px solid var(--sage-pale);
+    margin-bottom: 48px;
+  }
+
+  .quiz-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 18px;
+    color: var(--sage);
+    letter-spacing: 1px;
+  }
+
+  .progress-bar-wrap {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .progress-bar {
+    flex: 1;
+    height: 1px;
+    background: var(--sage-pale);
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--sage);
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  .progress-label {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--ink-faint);
+    white-space: nowrap;
+    font-weight: 400;
+  }
+
+  .question-block { animation: fadeSlide 0.4s ease forwards; }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .question-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+  }
+
+  .question-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: clamp(22px, 4vw, 30px);
+    line-height: 1.4;
+    color: var(--ink);
+    margin-bottom: 36px;
+  }
+
+  .options-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .option-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 18px 22px;
+    background: var(--white);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+
+  .option-item:hover { border-color: var(--sage-light); background: var(--cream-dark); }
+  .option-item.selected { border-color: var(--sage); background: var(--sage-pale); }
+
+  .option-marker {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--sage-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+    transition: all 0.25s;
+  }
+
+  .option-item.selected .option-marker { background: var(--sage); border-color: var(--sage); }
+  .option-item.selected .option-marker::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: white;
+  }
+
+  .option-text { font-size: 15px; line-height: 1.6; color: var(--ink-soft); }
+  .option-item.selected .option-text { color: var(--ink); }
+
+  .quiz-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--sage-pale);
+  }
+
+  .btn-back {
+    background: none;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .btn-back:hover { color: var(--ink); }
+  .btn-back:disabled { opacity: 0; pointer-events: none; }
+
+  #screen-loading { justify-content: center; align-items: center; text-align: center; }
+
+  .loading-stem {
+    width: 1px;
+    background: linear-gradient(to bottom, var(--sage-light), transparent);
+    margin: 0 auto 32px;
+    animation: grow 1.5s ease-out forwards;
+    height: 0;
+  }
+
+  @keyframes grow { to { height: 80px; } }
+
+  .loading-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-style: italic;
+    color: var(--ink-soft);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  #screen-result { justify-content: flex-start; }
+
+  .result-header {
+    padding: 48px 0 40px;
+    border-bottom: 1px solid var(--sage-pale);
+    margin-bottom: 48px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .result-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 12px;
+  }
+
+  .result-wound-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(34px, 7vw, 52px);
+    line-height: 1.05;
+    color: var(--ink);
+  }
+
+  .result-wound-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--gold);
+    margin-top: 8px;
+  }
+
+  .result-intensity {
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--ink-faint);
+    font-style: italic;
+  }
+
+  .result-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 200px;
+  }
+
+  .chart-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--ink-faint);
+  }
+
+  .chart-label { width: 80px; flex-shrink: 0; font-family: 'Inter', sans-serif; }
+
+  .chart-bar-bg { flex: 1; height: 3px; background: var(--sage-pale); }
+
+  .chart-bar-fill {
+    height: 100%;
+    background: var(--sage);
+    transition: width 1s ease;
+  }
+
+  .chart-bar-fill.primary { background: var(--gold); }
+
+  .result-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--gold-pale);
+    margin: 0 0 36px;
+  }
+
+  .result-section { margin-bottom: 48px; }
+
+  .result-section-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 20px;
+  }
+
+  .result-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(17px, 2.5vw, 20px);
+    line-height: 1.75;
+    color: var(--ink);
+  }
+
+  .result-body p { margin-bottom: 1.4em; }
+  .result-body p:last-child { margin-bottom: 0; }
+
+  .result-mantras {
+    background: var(--white);
+    border-left: 2px solid var(--gold-pale);
+    padding: 28px 28px 28px 32px;
+    margin-bottom: 48px;
+  }
+
+  .result-mantra-title {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .mantra-item {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+    position: relative;
+    padding-left: 16px;
+  }
+
+  .mantra-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 12px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--gold-pale);
+  }
+
+  .result-cta-section {
+    margin-bottom: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .result-cta-box {
+    background: linear-gradient(135deg, var(--cream-dark), var(--sage-pale));
+    padding: 36px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .result-cta-box.primary-cta {
+    background: linear-gradient(135deg, var(--sage-pale), #c8d9c2);
+  }
+
+  .cta-box-content { flex: 1; }
+
+  .cta-eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 10px;
+  }
+
+  .primary-cta .cta-eyebrow { color: var(--ink-soft); }
+
+  .cta-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    color: var(--ink);
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  .cta-text {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+
+  .cta-btn-wrap { flex-shrink: 0; }
+
+  @media (max-width: 520px) {
+    .result-cta-box {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 28px 24px;
+    }
+    .cta-btn-wrap { width: 100%; }
+    .cta-btn-wrap .btn-primary,
+    .cta-btn-wrap .btn-secondary-link { display: block; text-align: center; }
+  }
+
+  .btn-secondary-link {
+    display: inline-block;
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    border: 1px solid var(--sage-light);
+    text-decoration: none;
+    transition: all 0.3s;
+    white-space: nowrap;
+  }
+
+  .btn-secondary-link:hover {
+    border-color: var(--sage);
+    background: var(--cream-dark);
+  }
+
+  .result-footer {
+    text-align: center;
+    padding-top: 32px;
+    border-top: 1px solid var(--sage-pale);
+    margin-bottom: 40px;
+  }
+
+  .result-footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--ink-faint);
+    letter-spacing: 1px;
+  }
+
+  .btn-restart {
+    background: none;
+    border: none;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    margin-top: 16px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    transition: color 0.2s;
+  }
+
+  .btn-restart:hover { color: var(--sage); }
+
+  @media (max-width: 480px) {
+    .screen { padding: 40px 0 60px; }
+    .result-header { flex-direction: column; align-items: flex-start; }
+    .result-chart { width: 100%; }
+    .result-cta-box { padding: 28px 24px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="screen-intro" class="screen active">
+  <div class="container">
+    <div class="intro-ornament"></div>
+    <p class="intro-eyebrow">Sara Valentino</p>
+    <h1 class="title">La tua<br><em>ferita</em><br>più attiva</h1>
+    <p class="intro-text">
+      Portiamo tutte delle ferite. Alcune sono più attive di altre; alcune le sentiamo ogni giorno, altre si risvegliano solo in certi momenti.<br><br>
+      Quindici domande per capire quale ferita è più presente in te, adesso.
+    </p>
+    <button class="btn-primary" onclick="startQuiz()">Inizia</button>
+    <p class="intro-note">Circa 5 minuti. Nessuna risposta giusta o sbagliata.</p>
+  </div>
+</div>
+
+<div id="screen-quiz" class="screen">
+  <div class="container">
+    <div class="quiz-header">
+      <div class="quiz-brand">Sara Valentino</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        <span class="progress-label" id="progress-label">1 / 15</span>
+      </div>
+    </div>
+    <div id="question-area"></div>
+    <div class="quiz-nav">
+      <button class="btn-back" id="btn-back" onclick="prevQuestion()" disabled>Indietro</button>
+      <button class="btn-primary" id="btn-next" onclick="nextQuestion()" style="display:none">Continua</button>
+    </div>
+  </div>
+</div>
+
+<div id="screen-loading" class="screen">
+  <div class="container">
+    <div class="loading-stem"></div>
+    <p class="loading-text">Sto leggendo quello che hai condiviso…</p>
+  </div>
+</div>
+
+<div id="screen-result" class="screen">
+  <div class="container" id="result-container"></div>
+</div>
+
+<script>
+// Config Supabase (progetto gildaossani's Project) — usati solo per salvare
+// silenziosamente il risultato quando l'email arriva come parametro nel link
+// (es. da un flow ManyChat). Nessuna interazione visibile per chi risponde.
+const SUPABASE_URL = "https://qnhnsjqzheyiacfmmmbe.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFuaG5zanF6aGV5aWFjZm1tbWJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODEyMjMsImV4cCI6MjA5NDk1NzIyM30.Y0XwmMed7pRlBPmMpCpmgfdppTEUI0-FIKXOWbaRuYk";
+const SUBMIT_ENDPOINT = `${SUPABASE_URL}/functions/v1/sara-bussola-submit`;
+
+const WOUNDS = {
+  abbandono: {
+    name: "Abbandono",
+    subtitle: "Mi lasciano sempre",
+    descriptions: {
+      alta: `<p>La ferita dell'abbandono emerge con chiarezza nel modo in cui ti relazioni. Non nasce necessariamente da chi se n'è andato; spesso nasce da chi è rimasto, ma non era davvero presente. Da chi c'era fisicamente, ma emotivamente altrove. E tu hai imparato presto a non fare troppo affidamento, a reggere da sola quello che avrebbe potuto essere condiviso.</p>
+<p>Questa ferita si riconosce nel bisogno di conferme che non si placa mai del tutto, nella paura di essere lasciate che arriva prima ancora che qualcuno mostri segni di farlo, nella difficoltà a stare nella solitudine senza interpretarla come abbandono.</p>
+<p>Non è debolezza. È una strategia di sopravvivenza che hai costruito quando non avevi altri strumenti. Il primo passo non è smettere di sentirla; è riconoscere quando ti sta guidando.</p>`,
+      media: `<p>La ferita dell'abbandono è presente, ma non domina ogni aspetto della tua vita. Si attiva in certi contesti — nelle relazioni più intime, nei momenti di incertezza, quando senti che qualcuno potrebbe allontanarsi. Fuori da quei momenti, riesci a stare abbastanza in equilibrio.</p>
+<p>Questo non significa che non valga la pena guardarla. Anzi: le ferite di intensità media sono spesso quelle su cui si lavora meglio, perché hai già una certa distanza da esse senza essertene del tutto disconnessa.</p>`,
+      bassa: `<p>La ferita dell'abbandono è sullo sfondo. Non è quella che muove le tue scelte con più forza, anche se — come in tutte — c'è una traccia. Potresti riconoscerla più nelle persone intorno a te che in te stessa, oppure si manifesta solo in circostanze molto specifiche.</p>`
+    },
+    mantras: [
+      "Resto con me anche quando gli altri si allontanano.",
+      "Non ogni distanza è abbandono.",
+      "Ho imparato a reggere sola. Ora posso imparare a ricevere."
+    ]
+  },
+  rifiuto: {
+    name: "Rifiuto",
+    subtitle: "Non sono abbastanza",
+    descriptions: {
+      alta: `<p>La ferita del rifiuto è silenziosa e precisa. Non chiede spazio, non si lamenta; lavora nell'ombra, convincendoti che ci sia qualcosa in te che non va, qualcosa che gli altri vedono e che li porta a non sceglierti davvero.</p>
+<p>Si manifesta nel perfezionismo che non si placa mai, nel ritiro preventivo per non rischiare di essere rifiutata per prima, nella difficoltà a ricevere complimenti senza smontarli. È la voce che dice "non sono abbastanza" anche quando tutte le prove dicono il contrario.</p>
+<p>Guarire non significa diventare impermeabili al giudizio. Significa smettere di fare del giudizio degli altri la prova definitiva del tuo valore.</p>`,
+      media: `<p>La ferita del rifiuto è presente, ma non ti accompagna in ogni momento. La senti soprattutto in certi contesti — quando ti esponi, quando hai bisogno di essere vista, quando qualcosa di importante dipende dalla risposta di qualcun altro. Negli altri momenti riesci a sentirti abbastanza al sicuro.</p>
+<p>Riconoscerla è già un passo importante. La ferita del rifiuto è tra quelle che più facilmente si nasconde dietro la normalità, dietro la sensazione che sia "solo timidezza" o "poco autostima".</p>`,
+      bassa: `<p>La ferita del rifiuto non è quella più attiva in te. Riesci a esporti senza un'angoscia eccessiva, e il giudizio degli altri non è il parametro principale con cui misuri il tuo valore. Questo non significa che non ci sia; significa che non domina il tuo modo di muoverti nel mondo.</p>`
+    },
+    mantras: [
+      "Non ho bisogno di essere perfetta per meritare di essere vista.",
+      "Il rifiuto degli altri non è la prova di quello che sono.",
+      "Posso sbagliare senza diventare un errore."
+    ]
+  },
+  umiliazione: {
+    name: "Umiliazione",
+    subtitle: "Mi sono sempre sentita troppo",
+    descriptions: {
+      alta: `<p>Chi porta la ferita dell'umiliazione conosce bene la sensazione di occupare troppo spazio, fare troppo rumore, sentire troppo. È una ferita che nasce da chi ti ha trasmesso, in modo diretto o sottile, che i tuoi bisogni fossero eccessivi, che le tue emozioni fossero un peso.</p>
+<p>E così hai imparato a rimpicciolirti. A minimizzare. A prenderti cura degli altri prima ancora che qualcuno lo chiedesse, perché in quel modo almeno eri utile, e l'utilità sembrava una forma di permesso per esistere.</p>
+<p>Questo ciclo ha un nome. E riconoscerlo non significa accusare chi te l'ha trasmesso; significa iniziare a smettere di tramandarlo a te stessa.</p>`,
+      media: `<p>La ferita dell'umiliazione è presente in alcune aree della tua vita più che in altre. Potresti riconoscerla nella difficoltà a dire di no senza sentirti in colpa, o nel mettere i bisogni degli altri prima dei tuoi quasi automaticamente, anche quando non ce n'è motivo.</p>
+<p>Non è costante, ma quando si attiva sai riconoscerla — quella sensazione di occupare troppo spazio, di esagerare, di essere "pesante".</p>`,
+      bassa: `<p>La ferita dell'umiliazione non è quella che guida più spesso le tue scelte. Riesci a esprimerti, a occupare spazio, a fare richieste senza un'angoscia sproporzionata. Può esserci in alcune relazioni o contesti specifici, ma non è la tua ferita dominante in questo momento.</p>`
+    },
+    mantras: [
+      "I miei bisogni non sono eccessivi. Sono miei.",
+      "Prendermi cura di me non è egoismo.",
+      "Posso occupare spazio senza dover giustificare la mia presenza."
+    ]
+  },
+  tradimento: {
+    name: "Tradimento",
+    subtitle: "Non mi fido di nessuno",
+    descriptions: {
+      alta: `<p>La ferita del tradimento non nasce solo dai tradimenti evidenti; nasce dalle promesse non mantenute, dalle aspettative deluse, da chi avrebbe dovuto essere affidabile e non lo è stato. E da quel momento in poi qualcosa in te ha deciso: meglio fare da sola. Meglio non dipendere. Meglio controllare quello che si può controllare.</p>
+<p>Si riconosce nel bisogno di tenere le redini, nella difficoltà a delegare o a fidarsi che gli altri mantengano le loro parole, nella stanchezza cronica di dover sempre sopperire a chi delude le aspettative.</p>
+<p>Imparare di nuovo a fidarsi non è ingenuo. È un atto di coraggio lento, che comincia dal fidarsi di sé stessa.</p>`,
+      media: `<p>La ferita del tradimento si attiva in modo selettivo. Non sei diffidente con tutti, ma in alcune relazioni — o in certi tipi di situazioni — quella voce che dice "aspetta, stai attenta" si fa sentire più del necessario.</p>
+<p>Riesci a fidarti, ma con una riserva interna che a volte pesa più di quanto vorresti. E quando qualcuno ti delude, anche in modo piccolo, l'impatto è spesso maggiore di quello che ti aspetteresti.</p>`,
+      bassa: `<p>La ferita del tradimento non è quella più presente in te. Riesci a fidarti, a delegare, a dipendere dagli altri senza una vigilanza costante. Puoi riconoscere qualche traccia in situazioni specifiche, ma non è la ferita che più spesso orienta il tuo comportamento.</p>`
+    },
+    mantras: [
+      "Posso fidarmi della mia percezione.",
+      "Non ogni delusione è un tradimento.",
+      "Non devo fare tutto da sola per essere al sicuro."
+    ]
+  },
+  ingiustizia: {
+    name: "Ingiustizia",
+    subtitle: "Non ho diritto di sbagliare.",
+    descriptions: {
+      alta: `<p>La ferita dell'ingiustizia si costruisce nel confronto con un genitore rigido, esigente, spesso lontano nell'espressione degli affetti anche quando presente nei fatti. Hai imparato presto che il valore si guadagna con la prestazione, e che sbagliare significava perdere terreno che avresti dovuto riconquistare in fretta.</p>
+<p>Questa ferita si riconosce nel perfezionismo che non concede pause, nella difficoltà a mostrarti vulnerabile perché la vulnerabilità sembra debolezza, nel bisogno di avere sempre ragione perché avere torto è intollerabile. Hai imparato a controllare quello che potevi controllare, a costo di irrigidirti anche nei momenti che avrebbero richiesto morbidezza.</p>
+<p>Guarire questa ferita non significa smettere di avere standard alti. Significa smettere di misurare il tuo valore su quanto sei stata efficiente e ricordarti che avevi diritto a essere accolta anche da bambina, senza doverlo dimostrare.</p>`,
+      media: `<p>La ferita dell'ingiustizia si attiva soprattutto sotto pressione, quando le aspettative si alzano o quando senti che il tuo lavoro non viene riconosciuto quanto merita. Nella quotidianità riesci a lasciarti andare abbastanza, ma in certi contesti il bisogno di controllo e di correttezza torna a farsi sentire con forza.</p>
+<p>Riconoscerla in questa forma è utile: non ti governa sempre, ma quando emerge porta con sé rigidità e freddezza che non ti appartengono del tutto.</p>`,
+      bassa: `<p>La ferita dell'ingiustizia non è quella che guida più spesso le tue scelte. Riesci a tollerare l'imperfezione, la tua e quella degli altri, senza un bisogno costante di controllo. Può affiorare in situazioni molto specifiche, legate a standard o aspettative, ma non è la ferita che più ti definisce in questo momento.</p>`
+    },
+    mantras: [
+      "Il mio valore non si misura in prestazioni.",
+      "Posso avere torto senza smettere di valere.",
+      "Anche da ferma, senza controllare tutto, resto al sicuro."
+    ]
+  }
+};
+
+// Ogni domanda ha 6 opzioni: 5 ferite + 1 risposta neutra (wound: null)
+// La risposta neutra non aggiunge punti a nessuna ferita
+const QUESTIONS = [
+  {
+    text: "Quando qualcuno non risponde ai tuoi messaggi per ore, cosa senti più spesso?",
+    options: [
+      { text: "Niente di particolare; do per scontato che sia impegnato e aspetto.", wound: null },
+      { text: "Una preoccupazione sottile, il timore che qualcosa si sia rotto senza che tu sappia perché.", wound: "abbandono" },
+      { text: "Un fastidio silenzioso, la sensazione di non valere abbastanza la loro attenzione.", wound: "rifiuto" },
+      { text: "Una lieve irritazione, ma la metto da parte; non voglio sembrare pesante.", wound: "umiliazione" },
+      { text: "Ci faccio caso, ma aspetto; se non risponde, avrà le sue ragioni, anche se non le condivido.", wound: "tradimento" },
+      { text: "Un disappunto netto; sento che non è corretto verso di me.", wound: "ingiustizia" }
+    ]
+  },
+  {
+    text: "Quando qualcuno che ami si allontana emotivamente, qual è il tuo primo impulso?",
+    options: [
+      { text: "Cercare contatto, fare qualcosa per riavvicinarvi, riempire il vuoto.", wound: "abbandono" },
+      { text: "Chiederti cosa hai fatto di sbagliato e tornare mentalmente su ogni parola.", wound: "rifiuto" },
+      { text: "Ridurre i tuoi bisogni, renderti più utile, occupare meno spazio.", wound: "umiliazione" },
+      { text: "Aspettare, osservare, non mostrare quanto ti riguarda.", wound: "tradimento" },
+      { text: "Analizzare i fatti con lucidità, senza lasciare che l'emozione prenda il sopravvento.", wound: "ingiustizia" },
+      { text: "Dargli spazio, capire che ha i suoi momenti, e non drammatizzare.", wound: null }
+    ]
+  },
+  {
+    text: "In quale di queste frasi ti riconosci di più?",
+    options: [
+      { text: "Ho spesso paura che le persone che amo, prima o poi, se ne vadano.", wound: "abbandono" },
+      { text: "A volte mi sento fondamentalmente diversa, come se ci fosse qualcosa in me che non va.", wound: "rifiuto" },
+      { text: "Faccio fatica a chiedere qualcosa per me; mi sembra di disturbare.", wound: "umiliazione" },
+      { text: "Mi fido con difficoltà, anche quando le persone non mi hanno ancora delusa.", wound: "tradimento" },
+      { text: "Ho standard molto alti con me stessa, e faccio fatica a perdonarmi un errore.", wound: "ingiustizia" },
+      { text: "Non mi riconosco particolarmente in nessuna di queste.", wound: null }
+    ]
+  },
+  {
+    text: "Ricevere un complimento sincero ti fa sentire…",
+    options: [
+      { text: "Piacere semplice; lo accolgo senza troppa analisi.", wound: null },
+      { text: "Un calore breve, ma poi un timore: durerà? Cambierà qualcosa?", wound: "abbandono" },
+      { text: "Un disagio sottile, come se non lo meritassi davvero.", wound: "rifiuto" },
+      { text: "Quasi imbarazzo; non sei abituata a essere vista in modo positivo senza dover fare qualcosa.", wound: "umiliazione" },
+      { text: "Piacere, ma con una riserva: chissà cosa vogliono in cambio.", wound: "tradimento" },
+      { text: "Soddisfazione breve, subito seguita dal pensiero di cosa avresti potuto fare meglio.", wound: "ingiustizia" }
+    ]
+  },
+  {
+    text: "Come descrivresti il tuo rapporto con la solitudine?",
+    options: [
+      { text: "La vivo bene; è uno spazio che mi appartiene e che so abitare.", wound: null },
+      { text: "È difficile da reggere; tende a diventare rapidamente qualcosa di più pesante.", wound: "abbandono" },
+      { text: "In solitudine mi sento più al sicuro, ma a volte mi chiedo se sia perché mi piace o perché evito il giudizio.", wound: "rifiuto" },
+      { text: "In solitudine finalmente posso smettere di essere utile; è un sollievo, ma anche una sconfitta.", wound: "umiliazione" },
+      { text: "Preferisco la solitudine all'incertezza delle relazioni; almeno so cosa aspettarmi da me stessa.", wound: "tradimento" },
+      { text: "In solitudine nessuno può giudicare se hai fatto abbastanza; è un sollievo dal controllo costante.", wound: "ingiustizia" }
+    ]
+  },
+  {
+    text: "Quando dici di sì a qualcosa che avresti voluto rifiutare, cosa ti muove?",
+    options: [
+      { text: "Di solito riesco a dire di no quando voglio; non è un problema ricorrente per me.", wound: null },
+      { text: "La paura che un no possa allontanare le persone dalla mia vita.", wound: "abbandono" },
+      { text: "Il timore di essere vista come difficile o egoista.", wound: "rifiuto" },
+      { text: "Un automatismo antico; i miei bisogni vengono automaticamente dopo quelli degli altri.", wound: "umiliazione" },
+      { text: "Il calcolo che sia più semplice accontentare che spiegare e discutere.", wound: "tradimento" },
+      { text: "Il bisogno di essere ineccepibile: dire no senza una ragione perfetta sembra ingiusto verso l'altro.", wound: "ingiustizia" }
+    ]
+  },
+  {
+    text: "Nella tua vita, ti è capitato spesso di…",
+    options: [
+      { text: "Essere quella che dà di più nelle relazioni, con la speranza silenziosa che questo basti a farle durare.", wound: "abbandono" },
+      { text: "Stare in disparte per non rischiare di essere rifiutata, piuttosto che esporti.", wound: "rifiuto" },
+      { text: "Prenderti cura degli altri trascurando i tuoi bisogni, quasi automaticamente.", wound: "umiliazione" },
+      { text: "Fare da sola, perché chiedere aiuto significa dipendere da chi potrebbe deluderti.", wound: "tradimento" },
+      { text: "Darti standard altissimi e vivere ogni imperfezione come una sconfitta personale.", wound: "ingiustizia" },
+      { text: "No, non mi riconosco in questi schemi in modo ricorrente.", wound: null }
+    ]
+  },
+  {
+    text: "Quando senti una voce critica dentro di te, di solito dice…",
+    options: [
+      { text: "Non ho una voce critica particolarmente insistente; riesco a relativizzare abbastanza.", wound: null },
+      { text: "\"E se se ne andassero?\" \"E se non tornassero?\"", wound: "abbandono" },
+      { text: "\"Non sei abbastanza.\" \"Non capisco perché ti vogliano bene.\"", wound: "rifiuto" },
+      { text: "\"Non esagerare.\" \"Non essere pesante.\" \"Gli altri hanno bisogni più urgenti dei tuoi.\"", wound: "umiliazione" },
+      { text: "\"Non fidarti.\" \"Meglio non dipendere.\" \"Vedrai che ti deluderà.\"", wound: "tradimento" },
+      { text: "\"Potevi fare meglio.\" \"Non è ancora abbastanza preciso.\"", wound: "ingiustizia" }
+    ]
+  },
+  {
+    text: "Come reagisci quando qualcuno non mantiene una promessa?",
+    options: [
+      { text: "Dipende dalla promessa e dalla persona. Di solito riesco a capire e andare avanti.", wound: null },
+      { text: "Mi ferisce più di quanto mi aspettassi, anche se la promessa era piccola.", wound: "abbandono" },
+      { text: "Mi chiedo se abbia sopravvalutato il rapporto, se sono stata ingenua.", wound: "rifiuto" },
+      { text: "Minimizzo, dico che non importa, ma dentro qualcosa si chiude.", wound: "umiliazione" },
+      { text: "Lo registro. Non sempre lo dico, ma non lo dimentico.", wound: "tradimento" },
+      { text: "Lo trovo ingiusto, e faccio fatica a lasciarlo andare anche quando decido di non parlarne.", wound: "ingiustizia" }
+    ]
+  },
+  {
+    text: "In amore, quale di questi schemi ti appartiene di più?",
+    options: [
+      { text: "Riesco a vivere le relazioni con abbastanza fiducia, senza schemi ricorrenti che mi pesano.", wound: null },
+      { text: "Tendo a legarmi molto e presto, e poi ho paura che l'intensità spaventi l'altro.", wound: "abbandono" },
+      { text: "Faccio fatica a credere che qualcuno mi possa amare davvero, a lungo, così come sono.", wound: "rifiuto" },
+      { text: "Metto i bisogni del partner davanti ai miei, spesso senza accorgermene.", wound: "umiliazione" },
+      { text: "Tengo una parte di me in riserva; non mi apro completamente, per precauzione.", wound: "tradimento" },
+      { text: "Hai bisogno che tutto sia corretto ed equilibrato, e fai fatica a lasciar correre le piccole ingiustizie.", wound: "ingiustizia" }
+    ]
+  },
+  {
+    text: "Quando finisce una relazione importante, la prima cosa che pensi è…",
+    options: [
+      { text: "\"È andata così. Mi dispiace, ma capisco che non tutte le relazioni durano.\"", wound: null },
+      { text: "\"Sapevo che sarebbe finita così.\" E dentro c'è anche un po' di sollievo per l'attesa finita.", wound: "abbandono" },
+      { text: "\"Cosa ho fatto di sbagliato?\" Torni su tutto, cerchi il punto esatto in cui hai fallito.", wound: "rifiuto" },
+      { text: "\"Ho dato tutto, e non è bastato.\" Senti la colpa di non essere stata sufficiente.", wound: "umiliazione" },
+      { text: "\"Avevo ragione a non fidarmi.\" Quella voce che ti avvertiva aveva ragione.", wound: "tradimento" },
+      { text: "\"Ho dato quello che era giusto dare.\" Rivedi i conti, cerchi dove l'equilibrio si è rotto.", wound: "ingiustizia" }
+    ]
+  },
+  {
+    text: "Qual è la tua risposta istintiva quando qualcuno ti critica?",
+    options: [
+      { text: "Valuto la critica; se è giusta la accolgo, se non lo è la lascio andare senza troppo peso.", wound: null },
+      { text: "Ho paura che la critica segni l'inizio di un allontanamento.", wound: "abbandono" },
+      { text: "La prendo come una conferma di quello che temevo già di essere.", wound: "rifiuto" },
+      { text: "Mi scuso rapidamente, cerco di aggiustare, mi assicuro che l'altro non sia arrabbiato.", wound: "umiliazione" },
+      { text: "Valuto se la critica è giusta o è un tentativo di manipolarmi.", wound: "tradimento" },
+      { text: "Verifico se la critica è fondata con precisione quasi clinica, prima di lasciarla entrare.", wound: "ingiustizia" }
+    ]
+  },
+  {
+    text: "Nel tuo corpo, dove senti la tensione più spesso?",
+    options: [
+      { text: "Non ho una zona di tensione ricorrente; il mio corpo è abbastanza rilassato nella quotidianità.", wound: null },
+      { text: "Nel petto, nella gola; una stretta che arriva quando sento che qualcosa potrebbe cambiare.", wound: "abbandono" },
+      { text: "Nello stomaco; una sensazione di vuoto o di pesantezza prima di esporti o di essere giudicata.", wound: "rifiuto" },
+      { text: "Nelle spalle, nella schiena; il peso di tenere tutto in piedi senza mai chiedere aiuto.", wound: "umiliazione" },
+      { text: "Nella mascella, nel collo; tensione da controllo, da vigilanza costante.", wound: "tradimento" },
+      { text: "Nella mandibola, nelle mani; una rigidità che arriva quando senti che qualcosa non è giusto.", wound: "ingiustizia" }
+    ]
+  },
+  {
+    text: "C'è una frase che hai sentito spesso da bambina — o che avresti voluto sentire?",
+    options: [
+      { text: "Ho ricevuto quello di cui avevo bisogno; non sento una mancanza specifica in questo senso.", wound: null },
+      { text: "\"Resto. Non vado da nessuna parte.\"", wound: "abbandono" },
+      { text: "\"Sei già abbastanza, così come sei.\"", wound: "rifiuto" },
+      { text: "\"I tuoi bisogni sono importanti quanto quelli degli altri.\"", wound: "umiliazione" },
+      { text: "\"Puoi fidarti. Sarò qui.\"", wound: "tradimento" },
+      { text: "\"Vali anche quando sbagli.\"", wound: "ingiustizia" }
+    ]
+  },
+  {
+    text: "Quando pensi alla tua bambina interiore, cosa senti?",
+    options: [
+      { text: "Una tenerezza tranquilla; è una parte di me con cui ho un rapporto abbastanza sereno.", wound: null },
+      { text: "Una tenerezza mista a dolore; era una bambina che aspettava sempre qualcuno che non arrivava.", wound: "abbandono" },
+      { text: "Una compassione triste; aveva così tanta paura di non piacere, di non bastare.", wound: "rifiuto" },
+      { text: "Un senso di colpa; l'ho messa in secondo piano per così tanto tempo.", wound: "umiliazione" },
+      { text: "Una protezione istintiva; ha imparato presto che non poteva fidarsi facilmente.", wound: "tradimento" },
+      { text: "Una tenerezza severa; ha imparato troppo presto che l'amore si guadagna con i risultati.", wound: "ingiustizia" }
+    ]
+  }
+];
+
+// ── STATO ──
+let currentQ = 0;
+let answers = [];
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function startQuiz() {
+  currentQ = 0;
+  answers = [];
+  renderQuestion();
+  showScreen('screen-quiz');
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Shuffle le opzioni una volta sola per domanda, memorizzando l'ordine
+const shuffledOptions = QUESTIONS.map(q => shuffle(q.options));
+
+function renderQuestion() {
+  const q = QUESTIONS[currentQ];
+  const opts = shuffledOptions[currentQ];
+  const total = QUESTIONS.length;
+
+  document.getElementById('progress-fill').style.width = `${(currentQ / total) * 100}%`;
+  document.getElementById('progress-label').textContent = `${currentQ + 1} / ${total}`;
+
+  const selectedWound = answers[currentQ] !== undefined ? answers[currentQ] : 'NONE';
+
+  const html = `
+    <div class="question-block">
+      <div class="question-number">Domanda ${currentQ + 1}</div>
+      <div class="question-text">${q.text}</div>
+      <ul class="options-list">
+        ${opts.map((opt, i) => {
+          const woundVal = opt.wound === null ? '__neutral__' : opt.wound;
+          const isSelected = answers[currentQ] !== undefined && answers[currentQ] === woundVal;
+          return `
+          <li class="option-item ${isSelected ? 'selected' : ''}"
+              onclick="selectOption('${woundVal}', this)">
+            <div class="option-marker"></div>
+            <span class="option-text">${opt.text}</span>
+          </li>`;
+        }).join('')}
+      </ul>
+    </div>
+  `;
+
+  document.getElementById('question-area').innerHTML = html;
+
+  document.getElementById('btn-back').disabled = (currentQ === 0);
+  const nextBtn = document.getElementById('btn-next');
+  nextBtn.style.display = answers[currentQ] !== undefined ? 'inline-block' : 'none';
+  nextBtn.textContent = (currentQ === total - 1) ? 'Guarda il risultato' : 'Continua';
+}
+
+function selectOption(woundVal, el) {
+  document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
+  el.classList.add('selected');
+  answers[currentQ] = woundVal;
+  document.getElementById('btn-next').style.display = 'inline-block';
+}
+
+function nextQuestion() {
+  if (answers[currentQ] === undefined) return;
+  if (currentQ < QUESTIONS.length - 1) {
+    currentQ++;
+    renderQuestion();
+    window.scrollTo(0, 0);
+  } else {
+    showResult();
+  }
+}
+
+function prevQuestion() {
+  if (currentQ > 0) {
+    currentQ--;
+    renderQuestion();
+    window.scrollTo(0, 0);
+  }
+}
+
+// Salva silenziosamente il risultato su Supabase se l'email è arrivata
+// come parametro nel link (?email=...), tipicamente da un flow ManyChat.
+// Nessun blocco né feedback visibile: se fallisce, l'esperienza prosegue lo stesso.
+function submitResultSilently(primaryKey, intensity) {
+  const params = new URLSearchParams(window.location.search);
+  const email = params.get('email');
+  if (!email) return;
+
+  const answersPayload = {};
+  answers.forEach((wound, i) => {
+    answersPayload[`q${String(i + 1).padStart(2, '0')}`] = wound;
+  });
+
+  fetch(SUBMIT_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+    },
+    body: JSON.stringify({
+      email,
+      answers: answersPayload,
+      primaryWound: primaryKey,
+      intensity
+    })
+  }).catch(() => { /* silenzioso: non deve mai bloccare l'esperienza */ });
+}
+
+function showResult() {
+  showScreen('screen-loading');
+  setTimeout(() => {
+    const scores = { abbandono: 0, rifiuto: 0, umiliazione: 0, tradimento: 0, ingiustizia: 0 };
+    answers.forEach(w => {
+      if (w && w !== '__neutral__' && scores[w] !== undefined) scores[w]++;
+    });
+
+    const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+    const primaryKey = sorted[0][0];
+    const primaryScore = sorted[0][1];
+    const total = QUESTIONS.length;
+    const pct = primaryScore / total;
+
+    // Intensità della ferita principale
+    let intensity, intensityLabel;
+    if (pct >= 0.4) {
+      intensity = 'alta';
+      intensityLabel = 'Molto presente';
+    } else if (pct >= 0.2) {
+      intensity = 'media';
+      intensityLabel = 'Moderatamente presente';
+    } else {
+      intensity = 'bassa';
+      intensityLabel = 'Presente in modo lieve';
+    }
+
+    const primary = WOUNDS[primaryKey];
+
+    submitResultSilently(primaryKey, intensity);
+
+    const chartRows = sorted.map(([key, count], i) => {
+      const barPct = total > 0 ? Math.round((count / total) * 100) : 0;
+      return `
+        <div class="chart-row">
+          <span class="chart-label">${WOUNDS[key].name}</span>
+          <div class="chart-bar-bg">
+            <div class="chart-bar-fill ${i === 0 ? 'primary' : ''}"
+                 style="width:0%" data-pct="${barPct}"></div>
+          </div>
+        </div>`;
+    }).join('');
+
+    const html = `
+      <div class="result-header">
+        <div>
+          <div class="result-label">La tua ferita più attiva</div>
+          <div class="result-wound-name">${primary.name}</div>
+          <div class="result-wound-sub">${primary.subtitle}</div>
+          <div class="result-intensity">${intensityLabel}</div>
+        </div>
+        <div class="result-chart">${chartRows}</div>
+      </div>
+
+      <div class="result-divider"></div>
+
+      <div class="result-section">
+        <div class="result-section-title">Quello che questa ferita dice di te</div>
+        <div class="result-body">${primary.descriptions[intensity]}</div>
+      </div>
+
+      <div class="result-mantras">
+        <div class="result-mantra-title">Tre frasi per iniziare</div>
+        ${primary.mantras.map(m => `<div class="mantra-item">${m}</div>`).join('')}
+      </div>
+
+      <div class="result-cta-box primary-cta">
+        <div class="cta-box-content">
+          <div class="cta-eyebrow">Il corso</div>
+          <div class="cta-title">Oltre le ferite</div>
+          <p class="cta-text">Lavoriamo sulle cinque ferite insieme, su come si intrecciano e su come iniziare a cambiare gli schemi che continuano a ripetersi.</p>
+        </div>
+        <div class="cta-btn-wrap">
+          <a href="https://c9a1fb60.sibforms.com/serve/MUIFAG9ZbjcxDa3Rtw_0w_K7s3dYI63hwKrVmUzo1go9lg4wvcl-UhWtPZL1wm9_cSouJQqFfSizcp7QQHMNeAS4K1-1wuGsGZbpVzzQO2hCj4YyPZ_K_C_4QkC_967fRx_tQ3GpnEWs_2F90ZR2-W3rngDNEnw7DJoUHp-s2SkkSSnSM8IoSdIZY_h0uc0ynl3GSWZWZM1APLg3pw==" target="_blank" class="btn-primary" style="text-decoration:none">Entra in lista d'attesa</a>
+        </div>
+      </div>
+      <div class="result-cta-box" style="margin-top:16px;">
+        <div class="cta-box-content">
+          <div class="cta-eyebrow">Il libro</div>
+          <div class="cta-title">La tua bambina interiore</div>
+          <p class="cta-text">Un percorso pratico per guarire le ferite dell'infanzia e tornare a te stessa.</p>
+        </div>
+        <div class="cta-btn-wrap">
+          <a href="https://www.amazon.it/dp/B0H1W9TXWK" target="_blank" class="btn-secondary-link" style="text-decoration:none">Scopri su Amazon</a>
+        </div>
+      </div>
+
+      <div class="result-footer">
+        <div class="result-footer-brand">Sara Valentino</div>
+        <button class="btn-restart" onclick="restart()">Ricomincia dall'inizio</button>
+      </div>
+    `;
+
+    document.getElementById('result-container').innerHTML = html;
+    showScreen('screen-result');
+
+    setTimeout(() => {
+      document.querySelectorAll('.chart-bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.pct + '%';
+      });
+    }, 100);
+  }, 2000);
+}
+
+function restart() { startQuiz(); }
+</script>
+</body>
+</html>
