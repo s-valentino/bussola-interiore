@@ -257,6 +257,59 @@
   .btn-back:hover { color: var(--ink); }
   .btn-back:disabled { opacity: 0; pointer-events: none; }
 
+  #screen-email-gate { justify-content: center; align-items: center; text-align: center; }
+
+  .gate-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(28px, 6vw, 40px);
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+
+  .gate-subtitle {
+    font-size: 15px;
+    color: var(--ink-soft);
+    max-width: 440px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+  }
+
+  .gate-form { max-width: 360px; margin: 0 auto; }
+
+  .gate-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    border: 1px solid var(--sage-pale);
+    background: var(--white);
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+
+  .gate-input:focus { outline: none; border-color: var(--sage); }
+
+  .gate-submit {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .gate-error {
+    color: #b5603a;
+    font-size: 13px;
+    margin-top: 12px;
+    min-height: 18px;
+  }
+
+  .gate-privacy {
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-top: 20px;
+    line-height: 1.5;
+  }
+
   #screen-loading { justify-content: center; align-items: center; text-align: center; }
 
   .loading-stem {
@@ -574,6 +627,19 @@
       <button class="btn-back" id="btn-back" onclick="prevQuestion()" disabled>Indietro</button>
       <button class="btn-primary" id="btn-next" onclick="nextQuestion()" style="display:none">Continua</button>
     </div>
+  </div>
+</div>
+
+<div id="screen-email-gate" class="screen">
+  <div class="container">
+    <div class="gate-title">Il tuo risultato è pronto</div>
+    <p class="gate-subtitle">Lascia la tua email per vedere quale ferita è più attiva in te adesso, insieme al grafico completo e a tre frasi per iniziare a lavorarci.</p>
+    <form class="gate-form" id="gate-form" onsubmit="handleGateSubmit(event)">
+      <input type="email" class="gate-input" id="gate-email" placeholder="La tua email" required autocomplete="email">
+      <button type="submit" class="btn-primary gate-submit" id="gate-submit-btn">Scopri il risultato</button>
+      <div class="gate-error" id="gate-error"></div>
+    </form>
+    <p class="gate-privacy">Userò la tua email solo per inviarti il risultato e contenuti legati a Sara Valentino. Nessuno spam, puoi cancellarti quando vuoi.</p>
   </div>
 </div>
 
@@ -934,8 +1000,60 @@ function nextQuestion() {
     renderQuestion();
     window.scrollTo(0, 0);
   } else {
-    showResult();
+    // Se l'email arriva già come parametro nel link (flow ManyChat), salta il gate.
+    const params = new URLSearchParams(window.location.search);
+    const prefilledEmail = params.get('email');
+    if (prefilledEmail) {
+      collectedEmail = prefilledEmail;
+      showResult();
+    } else {
+      showScreen('screen-email-gate');
+      window.scrollTo(0, 0);
+      setTimeout(() => document.getElementById('gate-email')?.focus(), 50);
+    }
   }
+}
+
+// ── Gate email: raccoglie l'email in Brevo (lista "Bussola ferite") prima di mostrare il risultato ──
+const BREVO_BUSSOLA_FORM_ACTION = "https://c9a1fb60.sibforms.com/serve/MUIFAB_nu-sGlCYppUMMX3shRjBVOKkAwAMdjWgOSH6OW5RTbEDIy-HbgPhpvRPDFv01bZlO4l0qzBeqeDjQV_ayjjeU3jvdWs-SpukQdqLQVh-7qTxRl8pyos7rtW2ULIrFCDfz5TbeU-E3LC8Uiqe-FR3DLyLyPDBj0HmoZaxdbeLCkErDVpNRYzIcjg696l2twgGuOmmYkcNGvA==";
+let collectedEmail = null;
+
+function isValidEmail(v) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+}
+
+function submitToBrevoBussola(email) {
+  const fd = new FormData();
+  fd.append('EMAIL', email);
+  fd.append('locale', 'it');
+  fd.append('email_address_check', ''); // honeypot: deve restare vuoto
+  return fetch(BREVO_BUSSOLA_FORM_ACTION, {
+    method: 'POST',
+    mode: 'no-cors',
+    body: fd
+  }).catch(() => { /* non deve mai bloccare l'esperienza */ });
+}
+
+function handleGateSubmit(event) {
+  event.preventDefault();
+  const input = document.getElementById('gate-email');
+  const errorEl = document.getElementById('gate-error');
+  const btn = document.getElementById('gate-submit-btn');
+  const email = input.value.trim();
+
+  if (!isValidEmail(email)) {
+    errorEl.textContent = 'Controlla l\'indirizzo email, non sembra corretto.';
+    return;
+  }
+
+  errorEl.textContent = '';
+  btn.disabled = true;
+  btn.textContent = 'Un attimo…';
+  collectedEmail = email;
+
+  submitToBrevoBussola(email).finally(() => {
+    showResult();
+  });
 }
 
 function prevQuestion() {
@@ -951,7 +1069,7 @@ function prevQuestion() {
 // Nessun blocco né feedback visibile: se fallisce, l'esperienza prosegue lo stesso.
 function submitResultSilently(primaryKey, intensity) {
   const params = new URLSearchParams(window.location.search);
-  const email = params.get('email');
+  const email = collectedEmail || params.get('email');
   if (!email) return;
 
   const answersPayload = {};
@@ -1079,7 +1197,16 @@ function showResult() {
   }, 2000);
 }
 
-function restart() { startQuiz(); }
+function restart() {
+  collectedEmail = null;
+  const gateForm = document.getElementById('gate-form');
+  if (gateForm) gateForm.reset();
+  const btn = document.getElementById('gate-submit-btn');
+  if (btn) { btn.disabled = false; btn.textContent = 'Scopri il risultato'; }
+  const errorEl = document.getElementById('gate-error');
+  if (errorEl) errorEl.textContent = '';
+  startQuiz();
+}
 </script>
 </body>
 </html>
