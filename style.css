@@ -20,3 +20,8 @@
 .primary:disabled{opacity:.6}
 
 .answer .letter{height:30px;width:30px;font-size:14px;font-weight:600}
+.lettera h1{font-size:clamp(32px,5vw,52px);line-height:1.1;margin:10px 0 24px}
+.lettera-actions,.closing-actions{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:28px;font-family:Arial,Helvetica,sans-serif}
+.plain-link{display:inline-block;padding:15px 28px;border:1px solid #dcc6a8;border-radius:999px;color:var(--ink);text-decoration:none;background:#fffaf2}
+.closing h2{margin-top:0}
+@media print{body.has-letter header,body.has-letter footer,body.has-letter #app>.results>*:not(.lettera),.no-print{display:none!important}body.has-letter .lettera{border:none;margin:0;padding:0}}
